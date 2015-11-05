@@ -2,6 +2,8 @@
 <html lang="es">
     <head>
         <meta charset="UTF-8">
+        <link href="sunburst.css" type="text/css" rel="stylesheet" />
+        <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
     </head>
 <body>
 
@@ -28,6 +30,11 @@ function md($t) {
     global $converter;
     return $converter->convertToHtml($t);    
 };
+
+// Google PrettyPrint
+function gpp($code) {
+    return "<pre class=\"prettyprint\">$code</pre>";
+}
 
 function myInit($f){
     echo md('### ' . $f);
