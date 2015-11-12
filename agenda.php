@@ -28,7 +28,7 @@ function tag($t, $s) { return "<$t>$s<" . "/$t>"; }  // tag algo (el colorizador
 
 function tagArray($t, $a) {
     $s = "";
-    foreach ($a as $i) { $s .= tag($t, $i); };
+    foreach ($a as $i) $s .= tag($t, $i); 
     return $s;
 }
 
@@ -40,7 +40,7 @@ function table($ha, $aa) {      // headings array, data como array de arrays
 
 // funcion(es) pseudoSQL
 
-function orderBy($aa, $i) { // ordenar un array de arrays por $a[$i]
+function orderBy($aa, $i) { // ordenar un array de arrays por $aa[algo][$i]
     $ao = $aa;              // copiamos el array porque usort() lo modifica
     usort($ao, function($a, $b) use ($i) {return compare($a[$i], $b[$i]); });
     return $ao;

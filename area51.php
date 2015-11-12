@@ -11,7 +11,7 @@ myInit(__FILE__);
 // ay que tonto, tenemos tipos tambien :)
 
 
-
+echo "hm. PHP tiene array_map() entre otras cosas, con esto me vale de momento, BBS";
 
 
 #'; eval($code); echo gpp($code);

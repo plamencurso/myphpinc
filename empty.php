@@ -1,5 +1,5 @@
 <?php
-include 'inc.php';
+include 'inc.php'; // header
 myInit(__FILE__);
 #$code = '
 
@@ -10,9 +10,11 @@ myInit(__FILE__);
 
 
 
-#'; eval($code); echo gpp($code);
-?>    
 
-</body>
-</html>
+#'; eval($code); echo gpp($code);
+// getting my URL
+$yo = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["SCRIPT_NAME"];
+include "incf.php";
+echo disqus_code($yo, __FILE__, "cursomm");
+?>    
 
