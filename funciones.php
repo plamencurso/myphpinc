@@ -25,12 +25,13 @@ function t($t, $c = "", $a = []) { // tag, optional contents(string or array of 
     if (is_array($c)) // si es array de tags(strings)
         $c = implode("\n    ", $c) . "\n";  // intentamos formatearlo un poco
 
-    $a = implode("", array_map(function($k) use($a) { return " $k" . (($v = $a[$k]) ? "=$v" : ""); }, array_keys($a))); // implode $a, falta quoting de los values
+    $a = implode("", array_map(function($k) use($a) { return " $k" . (($v = $a[$k]) ? ("=" . q($v))  : ""); }, array_keys($a))); // implode $a, falta quoting de los values
 
     return "<$t$a" . ($c ? ">$c<" . "/$t>" : " />"); // tengo en cuenta el colorizador de Google por si acaso
 
 };
 
+function q($s) { return "\"" . htmlspecialchars($s) . "\""; } // finally some quoting
 function br() { return t("br"); }
 function h3($c) { return t("h3", $c); }
 function h4($c) { return t("h4", $c); }
