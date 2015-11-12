@@ -103,14 +103,19 @@ function perimetro51($tipo, $n1, $n2 = 0, $n3 = 0) {
     return $funcs[$tipo][1]($n1, $n2, $n3);
 }
 
-$funcs = [ // lista de tuplas de "tipo", [areaFunc, perimetroFunc]
+function volumen51($tipo, $n1, $n2 = 0, $n3 = 0) {
+    global $funcs;
+    return $funcs[$tipo][2]($n1, $n2, $n3);
+}
+
+$funcs = [ // lista de tuplas de "tipo", [areaFunc, perimetroFunc, volumenFunc]
     "cuadrado" =>   [function($a) {return $a * $a;}, function($a) {return 4 * $a;}], // cuadrado de a 
     "rectangulo" => [function($a, $b) {return $a * $b;}, function($a, $b) {return 2 * ($a + $b);}], // rectangulo de a b 
-    "triangulo" =>  [function($a, $h) {return $a * $h / 2;}, function($a, $h) {$b = sqrt($a*$a + $h*$h); return $a * $b / 2;}], // triángulo de a h (equilateral) perimetro esta mal?
+    "triangulo" =>  [function($a, $h) {return $a * $h / 2;}, function($a, $h) {$b = sqrt($a*$a/4 + $h*$h); return $a + $b * 2;}], // triángulo de a h (equilateral) perimetro esta mal?
     "rombo" =>      [function($d1, $d2) {return $d1 * $d2;}, function($d1, $d2) {return sqrt($d1*$d1 + $d2*$d2);}], // rombo de d1 d2 (equitodo tambien)
     "circulo" =>    [function($r) {return pi() * $r * $r;}, function($r) {return 2 * pi() * $r;}], // circulo de r 
-    "trapezoide" => [function($a, $b, $h) {return ($a + $b) * $h / 2;}, function($a, $b, $h) {$d = $a - $b; return $a + $b + 2 * sqrt ($d*$d + $h*$h);}], // rectangulo de a b 
- 
+    "trapecio" => [function($a, $b, $h) {return ($a + $b) * $h / 2;}, function($a, $b, $h) {$d = $a - $b; return $a + $b + 2 * sqrt ($d*$d + $h*$h);}], // rectangulo de a b 
+    "cubo" => [function ($a) {return 6 * area51("cuadrado", $a);}, function($a) {return 12 * $a;}, function($a) {return $a * $a * $a;}], 
 ];
 
 $pruebas = [ // lista de pruebas, los 0s los pongo para que no me salten NOTICIAS por indefinido
@@ -119,7 +124,7 @@ $pruebas = [ // lista de pruebas, los 0s los pongo para que no me salten NOTICIA
     ["triangulo", 100, 100, 0],
     ["rombo", 100, 100, 0],
     ["circulo", 100, 0, 0],
-    ["trapezoide", 200, 100, 100],
+    ["trapecio", 200, 100, 100],
 ];
 
 // PC::db($funcs, "funcs");
@@ -131,24 +136,16 @@ foreach ($pruebas as $ps) {
     echo "area51 de $tipo de $n1 $n2 $n3 = " . area51($tipo, $n1, $n2, $n3) . "<br/>";    
     echo "perimetro51 de $tipo de $n1 $n2 $n3 = " . perimetro51($tipo, $n1, $n2, $n3) . "<br/><br/>";    
 }
-';
-// echo md("```" . $code . "```");
-echo gpp($code);
-eval($code);
 
-//echo $Parsedown->text("```php\n" . $code . "```");
-//echo $Extra->text("```php\n" . $code . "```");
+// prueba cubo de $a
+$a = 3;
+echo "cubo de $a: area: " . area51("cubo", $a) . ", perimetro:" . perimetro51("cubo", $a) . ", volumen; " . volumen51("cubo", $a); 
 
-/*
-echo "area51 de cuadrado de 100:  " . area51("cuadrado", 100) . "<br />";
-echo "perimetro51 de cuadrado de 100: " . perimetro51("cuadrado", 100) . "<br />";
-echo "area51 de rectangulo de 100 100:  " . area51("rectangulo", 100, 100) . "<br />";
-echo "perimetro de rectangulo de 100 100:  " . area51("rectangulo", 100, 100) . "<br />";
-echo "area51 de triangulo de 100:  " . area51("triangulo", 100) . "<br />";
-echo "perimetro51 de triangulo de 100 100: " . perimetro51("rombo", 100) . "<br />";
-echo "area51 de rombo de 100:  " . area51("rombo", 100) . "<br />";
-echo "perimetro51 de rombo de 100: " . perimetro51("rombo", 100) . "<br />";
-*/
+'; echo gpp($code); eval($code);
+
+$yo = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["SCRIPT_NAME"];
+include "incf.php";
+echo disqus_code($yo, __FILE__, "cursomm");
 
 ?>    
 
