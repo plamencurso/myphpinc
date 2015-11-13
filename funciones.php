@@ -4,7 +4,7 @@ if (__FILE__ == $_SERVER['SCRIPT_FILENAME']) {
     require_once 'inc.php'; // header
     myInit(__FILE__);
 }
-//$code = '
+$code = '
 // FUNCIONES matematicas
 $funciones = [ // [figura => [nombreFuncion => funcion]]
     "cuadrado" =>   ["area" => function($a) {return $a * $a;}, "perimetro" => function($a) {return 4 * $a;}], // cuadrado de a 
@@ -43,7 +43,17 @@ function h3($c) { return t("h3", $c); }
 function h4($c) { return t("h4", $c); }
 
 // formularios
-function form($n, $act, $c) { return "\n" . t("form", $c, ["name" => $n, "action" => $act, "method" => "GET"]);} // habra que cambiar esto para POST, entonces faltaria enctype?
+
+// form(name, action, contents)
+// por defecto asume name=formulario action=mimismo 
+function form($c, $a = []) {return "\n" . 
+    t("form", $c, 
+        cattr("name", "formulario", 
+        cattr("action", basename($_SERVER["SCRIPT_NAME"]),  // atributos por default 
+        cattr("method", "GET", $a)))
+    ) . "\n";
+} // habra que cambiar esto para POST, entonces faltaria enctype?
+
 function input($ia) {return t("input", "", $ia); } 
 
 // special(simple defaults) inputs
@@ -54,9 +64,8 @@ function lnvinput($n, $v, $a = []) { return t("label", $n) . input(cattr("name",
 function submit($n, $v = "") {return input(["type" => "submit", "name" => $n, "value" => ($v ? $v : $n)]); }  // mecesita ser algo como lninput
 function hidden($n, $v) {return input(["type" => "hidden", "name" => $n, "value" => $v]); }
 function ahref($href, $t) { return t("a", $t, ["href" => $href]); }
-//'; eval($code); 
+'; eval($code); 
 
-/*
 if (__FILE__ == $_SERVER['SCRIPT_FILENAME']) { // nos estan mostrando directamente, no incluyendo, muestra una pagina entera
     echo gpp($code); // muestra el codigo 
 
@@ -66,6 +75,5 @@ if (__FILE__ == $_SERVER['SCRIPT_FILENAME']) { // nos estan mostrando directamen
     include_once "incf.php";
     echo disqus_code($yo, __FILE__, "cursomm");
 }
-*/
 ?>    
 

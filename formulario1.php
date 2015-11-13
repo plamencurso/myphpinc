@@ -30,8 +30,8 @@ if (isset($_GET["enviar"])) { // tenemos datos, procesamos y mostramos
 
 echo h4("Que desea?");
 
-echo form("formulario", basename($_SERVER["SCRIPT_NAME"]), [  // mostramos siempre el formulario, procesamos en el mismo archivo
-    lnvinput("figura", $figura, ["autofocus" => ""]),         // probamos lnviput()
+echo form([                     // mostramos siempre el formulario, procesamos en el mismo archivo
+    lnvinput("figura", $figura, ["autofocus" => ""]),
     lnvinput("funcion", $funcion),
     lnvinput("n1", $n1 + 1),    // con esto podemos seguir pulsando a Entrar y nos va aumentando    
     lnvinput("n2", $n2),        // así guardarando los valores del formulario o introduciemdo diferentes
