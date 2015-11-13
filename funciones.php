@@ -17,7 +17,7 @@ $funciones = [ // [figura => [nombreFuncion => funcion]]
 ];
 
 // FUNCIONES HTML
-// $t seria tag, $a - atributos del tag, $c - contenido del tag
+// $t seria tag, $a - atributos del tag, $c - contenido del tag, $k - key, $v - value
 
 // función simple para emitir un elemento HTML, asi nos lo quitamos del medio lo antes posible (el HTML, no el elemento :)
 function t($t, $c = "", $a = []) { // tag, optional contents(string or array of strings), optional attributes(assoc array)
@@ -25,7 +25,7 @@ function t($t, $c = "", $a = []) { // tag, optional contents(string or array of 
     if (is_array($c)) // si es array de tags(strings)
         $c = "\n    " . implode("\n    ", $c) . "\n";  // intentamos formatearlo un poco
 
-    $a = implode("", array_map(function($k) use($a) { return " $k" . (($v = $a[$k]) ? ("=" . q($v))  : ""); }, array_keys($a))); // esto va a fallar si de verdad queremos pasar un valor de 0
+    $a = implode("", array_map(function($k) use($a) { return " $k" . (($v = $a[$k]) ? ("=" . q($v))  : ""); }, array_keys($a))); // esto puede fallar si pasamos un valor de 0
 
     return "<$t$a" . ($c ? ">$c<" . "/$t>" : " />"); // tengo en cuenta el colorizador de Google
 
@@ -34,21 +34,24 @@ function t($t, $c = "", $a = []) { // tag, optional contents(string or array of 
 // todos estos devuelven un string, supuestamente de HTML bien formado
 
 function q($s) { return "\"" . htmlspecialchars($s) . "\""; } // finally some quoting
+// check for an attribute and add it if necessary
+function cattr($k, $v, $a = []) { if(!array_key_exists($k, $a)) $a[$k] = $v; return $a; } // returning $a allows nesting, like in lvninput() below
+
+
 function br() { return t("br"); }
 function h3($c) { return t("h3", $c); }
 function h4($c) { return t("h4", $c); }
+
+// formularios
 function form($n, $act, $c) { return "\n" . t("form", $c, ["name" => $n, "action" => $act, "method" => "GET"]);} // habra que cambiar esto para POST, entonces faltaria enctype?
 function input($ia) {return t("input", "", $ia); } 
 
-// check for an attribute and add it if necessary
-function cattr($k, $v, $a = []) { if(!array_key_exists($k, $a)) $a[$k] = $v; return $a; } // returns $a for nesting
-
 // special(simple defaults) inputs
 function linput($l, $a) { return t("label", $l) . input($a); } // labeled input
-function lninput($l, $a = []) { return t("label", $l) . input(cattr("name", $l, $a)); } // labeled input with a default name=label
-function lnvinput($l, $a) { return t("label", $l) . input(cattr("name", $l), $a); } // labeled input with a default name=label and value=$name
+function lninput($n, $a = []) { return t("label", $n) . input(cattr("name", $n, $a)); } // labeled input with a default name=label
+function lnvinput($n, $v, $a = []) { return t("label", $n) . input(cattr("name", $n, cattr("value", $v, $a))); } // labeled input with a default name=$n and value=$v
 
-function submit($n, $v = "") {return input(["type" => "submit", "name" => $n, "value" => ($v ? $v : $n)]); }  // mecesita algo como lninput
+function submit($n, $v = "") {return input(["type" => "submit", "name" => $n, "value" => ($v ? $v : $n)]); }  // mecesita ser algo como lninput
 function hidden($n, $v) {return input(["type" => "hidden", "name" => $n, "value" => $v]); }
 function ahref($href, $t) { return t("a", $t, ["href" => $href]); }
 //'; eval($code); 
