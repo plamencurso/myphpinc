@@ -4,7 +4,7 @@ if (__FILE__ == $_SERVER['SCRIPT_FILENAME']) {
     require_once 'inc.php'; // header
     myInit(__FILE__);
 }
-$code = '
+//$code = '
 // FUNCIONES matematicas
 $funciones = [ // [figura => [nombreFuncion => funcion]]
     "cuadrado" =>   ["area" => function($a) {return $a * $a;}, "perimetro" => function($a) {return 4 * $a;}], // cuadrado de a 
@@ -13,7 +13,7 @@ $funciones = [ // [figura => [nombreFuncion => funcion]]
     "rombo" =>      ["area" => function($d1, $d2) {return $d1 * $d2;}, "perimetro" => function($d1, $d2) {return sqrt($d1*$d1 + $d2*$d2);}], // rombo de d1 d2 (equitodo tambien)
     "circulo" =>    ["area" => function($r) {return pi() * $r * $r;}, "perimetro" => function($r) {return 2 * pi() * $r;}], // circulo de r 
     "trapecio" =>   ["area" => function($a, $b, $h) {return ($a + $b) * $h / 2;}, "perimetro" => function($a, $b, $h) {$d = $a - $b; return $a + $b + 2 * sqrt ($d*$d + $h*$h);}], // rectangulo de a b 
-    "cubo" =>       ["area" => function ($a) {return 6 * $a * $a;}, "perimetro" => function($a) {return 12 * $a;}, "volumen" => function($a) {return $a * $a * $a;}], 
+    "cubo" =>       ["superficie" => function ($a) {return 6 * $a * $a;}, "perimetro" => function($a) {return 12 * $a;}, "volumen" => function($a) {return $a * $a * $a;}], 
 ];
 
 // FUNCIONES HTML
@@ -23,29 +23,39 @@ $funciones = [ // [figura => [nombreFuncion => funcion]]
 function t($t, $c = "", $a = []) { // tag, optional contents(string or array of strings), optional attributes(assoc array)
 
     if (is_array($c)) // si es array de tags(strings)
-        $c = implode("\n    ", $c) . "\n";  // intentamos formatearlo un poco
+        $c = "\n    " . implode("\n    ", $c) . "\n";  // intentamos formatearlo un poco
 
-    $a = implode("", array_map(function($k) use($a) { return " $k" . (($v = $a[$k]) ? ("=" . q($v))  : ""); }, array_keys($a))); // implode $a, falta quoting de los values
+    $a = implode("", array_map(function($k) use($a) { return " $k" . (($v = $a[$k]) ? ("=" . q($v))  : ""); }, array_keys($a))); // esto va a fallar si de verdad queremos pasar un valor de 0
 
-    return "<$t$a" . ($c ? ">$c<" . "/$t>" : " />"); // tengo en cuenta el colorizador de Google por si acaso
+    return "<$t$a" . ($c ? ">$c<" . "/$t>" : " />"); // tengo en cuenta el colorizador de Google
 
 };
+
+// todos estos devuelven un string, supuestamente de HTML bien formado
 
 function q($s) { return "\"" . htmlspecialchars($s) . "\""; } // finally some quoting
 function br() { return t("br"); }
 function h3($c) { return t("h3", $c); }
 function h4($c) { return t("h4", $c); }
-function form($n, $act, $c) { return t("form", $c, ["name" => $n, "action" => $act, "method" => "GET"]);} // habra que cambiar esto para POST, entonces faltaria enctype
+function form($n, $act, $c) { return "\n" . t("form", $c, ["name" => $n, "action" => $act, "method" => "GET"]);} // habra que cambiar esto para POST, entonces faltaria enctype?
 function input($ia) {return t("input", "", $ia); } 
-function linput($l, $ia) { return t("label", $l) . input($ia); } // labeled input
-function submit($n, $v) {return input(["type" => "submit", "name" => $n, "value" => $v]); }
+
+// check for an attribute and add it if necessary
+function cattr($k, $v, $a = []) { if(!array_key_exists($k, $a)) $a[$k] = $v; return $a; } // returns $a for nesting
+
+// special(simple defaults) inputs
+function linput($l, $a) { return t("label", $l) . input($a); } // labeled input
+function lninput($l, $a = []) { return t("label", $l) . input(cattr("name", $l, $a)); } // labeled input with a default name=label
+function lnvinput($l, $a) { return t("label", $l) . input(cattr("name", $l), $a); } // labeled input with a default name=label and value=$name
+
+function submit($n, $v = "") {return input(["type" => "submit", "name" => $n, "value" => ($v ? $v : $n)]); }  // mecesita algo como lninput
 function hidden($n, $v) {return input(["type" => "hidden", "name" => $n, "value" => $v]); }
 function ahref($href, $t) { return t("a", $t, ["href" => $href]); }
-'; eval($code); 
+//'; eval($code); 
 
-if (__FILE__ == $_SERVER['SCRIPT_FILENAME']) {
-// if (!in_array(__FILE__, get_included_files())) { // we are being displayed directly
-    echo gpp($code); // this belongs here
+/*
+if (__FILE__ == $_SERVER['SCRIPT_FILENAME']) { // nos estan mostrando directamente, no incluyendo, muestra una pagina entera
+    echo gpp($code); // muestra el codigo 
 
     // getting my URL
 
@@ -53,5 +63,6 @@ if (__FILE__ == $_SERVER['SCRIPT_FILENAME']) {
     include_once "incf.php";
     echo disqus_code($yo, __FILE__, "cursomm");
 }
+*/
 ?>    
 
