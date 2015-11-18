@@ -1,5 +1,6 @@
 <?php
-include 'inc.php'; // header
+$editing = true;  // do not include disqus
+include_once "inc.php"; // header
 myInit(__FILE__);
 #$code = '
 
@@ -15,6 +16,7 @@ myInit(__FILE__);
 // getting my URL
 $yo = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["SCRIPT_NAME"];
 include "incf.php";
-echo disqus_code($yo, __FILE__, "cursomm");
+
+if (!$editing) echo disqus_code($yo, __FILE__, "cursomm");
 ?>    
 

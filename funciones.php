@@ -1,4 +1,5 @@
 <?php
+$editing = false;
 if (__FILE__ == $_SERVER['SCRIPT_FILENAME']) {
 // if (!in_array(__FILE__, get_included_files())) { // we are being displayed directly
     require_once 'inc.php'; // header
@@ -62,7 +63,10 @@ function lninput($n, $a = []) { return t("label", $n) . input(cattr("name", $n, 
 function lnvinput($n, $v, $a = []) { return t("label", $n) . input(cattr("name", $n, cattr("value", $v, $a))); } // labeled input with a default name=$n and value=$v
 
 function submit($n, $v = "") {return input(["type" => "submit", "name" => $n, "value" => ($v ? $v : $n)]); }  // mecesita ser algo como lninput
+function rst($n, $v = "") {return input(["type" => "reset", "name" => $n, "value" => ($v ? $v : $n)]); }  // mecesita ser algo como lninput
+
 function hidden($n, $v) {return input(["type" => "hidden", "name" => $n, "value" => $v]); }
+
 function ahref($href, $t) { return t("a", $t, ["href" => $href]); }
 '; eval($code); 
 
@@ -73,7 +77,7 @@ if (__FILE__ == $_SERVER['SCRIPT_FILENAME']) { // nos estan mostrando directamen
 
     $yo = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["SCRIPT_NAME"];
     include_once "incf.php";
-    echo disqus_code($yo, __FILE__, "cursomm");
+    if (!$editing) echo disqus_code($yo, __FILE__, "cursomm");
 }
 ?>    
 

@@ -13,9 +13,6 @@ $handler = PhpConsole\Handler::getInstance();
 $handler->start();
 // $handler->debug('called from handler debug', 'some.three.tags');
 PhpConsole\Helper::register();  // para PC::db y PC::debug
-//PC::db('Entering ' . __FILE__);
-
-//PC::db($_GET);
 
 function md($t) {
     global $converter;
@@ -45,10 +42,12 @@ if ($title == "") $title = basename($f);
 
 
 
-    echo md('### ' . $f);
+    echo md('### ' . $f) . "<a href=\"e.php\">e.php</a>: mas ejercicios.";
 
     PC::db('Entering ' . $f);
     if ($_GET) PC::db($_GET, "_GET");
+    if ($_POST) PC::db($_POST, "_POST");
+    if ($_REQUEST) PC::db($_REQUEST, "_REQUEST");
 };
 
 

@@ -11,8 +11,8 @@ $figura = $funcion = $n1 = $n2 = $n3 = ""; // esto vale solo la primera invocaci
 if (isset($_GET["enviar"])) { // tenemos datos, procesamos y mostramos
     $figura = $_GET["figura"]; 
     $funcion = $_GET["funcion"]; 
-    $n1 = $_GET["n1"]; 
-    $n2 = $_GET["n2"]; 
+    $n1 = $_GET["n1"];              // usar extract(_REQUEST), muchisimo mejor
+    $n2 = $_GET["n2"];              // http://php.net/manual/es/function.extract.php    
     $n3 = $_GET["n3"]; 
     
     echo "quiere calcular $funcion de $figura con parametro(s) $n1 $n2 $n3 ..." . br();
