@@ -4,6 +4,7 @@ include_once "inc.php"; // header
 myInit(__FILE__);
 #$code = '
 require_once "funciones.php";
+
 // ejemplo pedido - [[base imponible, articulo, cantidad]]
 $titulos = ["precio", "cosa", "cantidad"];
 $pedido = [
@@ -13,7 +14,15 @@ $pedido = [
     [3.50, "otra cosa", 3.9],  // la 4ª me superó :(
 ];
 
-echo table($titulos, $pedido);
+echo "tabla simple" . table($titulos, $pedido);
+echo br() . "parece que HTML5 quita todos los atributos de TABLE (they say use CSS), queda uno - sortable" .
+    table($titulos, $pedido, ["sortable" => "sortable"]);
+
+echo br() . "probamos border" .
+    table($titulos, $pedido, ["border" => ""]);
+
+echo br() . "ponemos classes y no lo torturamos mas (ver codigo fuente)" .
+    table($titulos, $pedido, ["class" => "mytable"], ["class" => "myth"], ["class" => "mytr"], ["class" => "mytd"]);
 
 #'; eval($code); echo gpp($code);
 // getting my URL
