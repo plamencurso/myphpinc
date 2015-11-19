@@ -1,6 +1,8 @@
 <?php
 include "inc.php"; // header
 myInit(__FILE__);
+PC::db((new Tidy)->getConfig(), "Tidy");
+
 #$code = '
 include_once "funciones.php";   // funciones matematicas (y HTML)
 include_once "admin.php";       // funciones administrativas
@@ -89,11 +91,9 @@ if($_REQUEST) {
             hidden("action", $fma_action),  // guardamos esto para volver al apartado de administración
         ]);
         
-        
-        
-        // FIN PAGINA FUNCIONES MATEMATICAS
+        // FIN PAGINA FUNCIONES ADMINISTRATIVAS
     
-    } else echo h3("se me ha perdido la acción por algún sitio, tengo esto: $fma_action");
+    } else echo h3("se me ha perdido la acción por el camino, tengo esto: $fma_action");
 }
 
 

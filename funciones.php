@@ -50,7 +50,7 @@ function tarray($tag, $arr = [], $a = []) {
 // es un poco chapusa pero bueno, luego lo hago  bien :)
 
 function table($harr, $aarr, $tablea = [], $tha = [], $tra = [], $tda = []) {
-    $res = tarray("th", $harr, $tha);       // aqui acumulamos el resultado parcial - los headings + rows
+    $res = t("tr", tarray("th", $harr, $tha), $tra);       // aqui acumulamos el resultado parcial - los headings + rows
 
     foreach ($aarr as $arr) 
         $res .= t("tr", tarray("td", $arr, $tda), $tra); 

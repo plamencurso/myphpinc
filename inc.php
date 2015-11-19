@@ -29,7 +29,7 @@ function myInit($f, $title = "") { // calling file, optional title
     if ($title == "") $title = basename($f); 
     
     echo '
-<DOCTYPE html>
+<!DOCTYPE html>
 <html lang="es">
     <head>
         <meta charset="UTF-8">
@@ -43,7 +43,7 @@ function myInit($f, $title = "") { // calling file, optional title
 
 
 
-    echo "<h3><a href=" . basename($f) . ">$f</a>";
+    echo "<h3><a href=" . basename($f) . ">$f</a></h3>";
 
     PC::db('Entering ' . $f);
     if ($_GET) PC::db($_GET, "_GET");
