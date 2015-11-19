@@ -26,7 +26,8 @@ function gpp($code) {
 
 function myInit($f, $title = "") { // calling file, optional title
 
-if ($title == "") $title = basename($f); 
+    if ($title == "") $title = basename($f); 
+    
     echo '
 <DOCTYPE html>
 <html lang="es">
@@ -42,7 +43,7 @@ if ($title == "") $title = basename($f);
 
 
 
-    echo md('### ' . $f) . "<a href=\"e.php\">e.php</a>: mas ejercicios.";
+    echo "<h3><a href=" . basename($f) . ">$f</a>";
 
     PC::db('Entering ' . $f);
     if ($_GET) PC::db($_GET, "_GET");
