@@ -5,15 +5,13 @@ myInit(__FILE__);
 #$code = '
 $yo = basename($_SERVER["SCRIPT_NAME"]);  // para enlaces relativos a este mismo script
 
-// ESTO NO FUNCIONA ... MUCHO
-
 // DATOS
 
 // son 2 relaciones 1 a N
 $continentes = ["Europa", "Asia"];
 
 $paises["Europa"] = ["España", "Portugal"];
-$ciudades["España"] = ["Madrid", "Barcelona"];
+$ciudades["España"] = ["Madrid", "Barcelona", "Ciudad Real"];
 $ciudades["Portugal"] = ["Lisboa", "Porto"];
 
 $paises["Asia"] = ["China", "India"];
