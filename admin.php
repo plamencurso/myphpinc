@@ -6,7 +6,7 @@ if (__FILE__ == $_SERVER['SCRIPT_FILENAME']) {
     myInit(__FILE__);
 }
 #$code = '
-require_once "funciones.php"; // para las funciones html
+require_once "html.php"; // para las funciones html
 
 $sep = "|"; // separador para adm_add() y calcular_factura()
 
@@ -16,7 +16,6 @@ $sep = "|"; // separador para adm_add() y calcular_factura()
 function adm_add($as, $v) {   // array string, value
     global $sep;
     return strlen($as) > 0 ? "$as$sep$v" : $v;
-
 }
 
 // suponiendo los argumentos son arraystrings del mismo tamaño, devolver el HTML para la factura

@@ -1,12 +1,12 @@
 <?php
-include "inc.php"; // header
+require_once "inc.php"; // header
 myInit(__FILE__);
-PC::db((new Tidy)->getConfig(), "Tidy");
+$editing = true;    
 
 #$code = '
-include_once "funciones.php";   // funciones matematicas (y HTML)
-include_once "admin.php";       // funciones administrativas
-$editing = true;    
+require_once "html.php";    // funciones HTML
+require_once "math.php";    // funciones matematicas
+require_once "admin.php";   // funciones administrativas
 
 $math_label = "Matemáticas";
 $adm_label = "Administrativas";
@@ -25,7 +25,7 @@ if($_REQUEST) {  // tenemos datos
 echo form([
     submit("action", $math_label),
     submit("action", $adm_label),
-    hidden("fma_action", $fma_action)
+//    hidden("fma_action", $fma_action) // esto no tiene mucho sentido?
 ]);
 
 if($_REQUEST) {

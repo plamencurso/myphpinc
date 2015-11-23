@@ -13,6 +13,8 @@ $handler = PhpConsole\Handler::getInstance();
 $handler->start();
 // $handler->debug('called from handler debug', 'some.three.tags');
 PhpConsole\Helper::register();  // para PC::db y PC::debug
+PC::db((new Tidy)->getConfig(), "Tidy");
+
 
 function md($t) {
     global $converter;
@@ -36,7 +38,7 @@ function myInit($f, $title = "") { // calling file, optional title
         <title>' . $title . '</title>
 <!--        <link href="sunburst.css" type="text/css" rel="stylesheet" /> -->
         <link href="sons-of-obsidian.css" type="text/css" rel="stylesheet" />
-        <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script>
+<!--        <script src="https://cdn.rawgit.com/google/code-prettify/master/loader/run_prettify.js"></script> -->
     </head>
 <body>
 ';
