@@ -9,7 +9,7 @@ $handler = PhpConsole\Handler::getInstance();
 $handler->start();
 // $handler->debug('called from handler debug', 'some.three.tags');
 PhpConsole\Helper::register();  // para PC::db y PC::debug
-PC::db((new Tidy)->getConfig(), "Tidy");
+// PC::db((new Tidy)->getConfig(), "Tidy");
 
 function myInit($f, $title = "") { // calling file, optional title
 
@@ -30,6 +30,7 @@ function myInit($f, $title = "") { // calling file, optional title
     PC::db('Entering ' . $f);
     if ($_GET) PC::db($_GET, "_GET");
     if ($_POST) PC::db($_POST, "_POST");
+    if ($_FILES) PC::db($_FILES, "_FILES");
     if ($_REQUEST) PC::db($_REQUEST, "_REQUEST");
 };
 
