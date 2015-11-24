@@ -44,7 +44,7 @@ echo $ul;
 // a ver si puedo mostrar $cpc con table() que necesita array de arrays
 echo table(["Continente", "País", "Ciudad"], $lcpc);   // si, puedo :)
 
-'; eval($code); highlight_string("<?php $code ?>");
+'; eval($code); highlight_string("<?php$code?>");
 
 // getting my URL
 $yo = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["SCRIPT_NAME"];

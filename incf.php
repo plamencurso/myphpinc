@@ -23,8 +23,6 @@ function disqus_code($url, $id, $shortname) {
         })();
     </script>
     <noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript" rel="nofollow">comments powered by Disqus.</a></noscript>
-    </body>
-    </html>
 ');}
 
 ?>
