@@ -2,17 +2,14 @@
 $editing = true;  // do not include disqus
 require_once "inc.php"; // header
 myInit(__FILE__);
-$code = '
+#$code = '
 
 
 
 
-echo "testing empty.php";
 
 
-
-
-'; eval($code); highlight_string("<?php $code ?>");
+#'; eval($code); highlight_string("<?php $code");
 
 // getting my URL
 $yo = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["SCRIPT_NAME"];
