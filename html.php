@@ -30,7 +30,7 @@ function t($t, $c = "", $a = []) { // tag, contenidos opcionál (string o array 
 function tarray($tag, $arr = [], $a = []) {
     $res = "";   // el resultado en HTML
     foreach ($arr as $i) $res .= t($tag, $i, $a);
-    return "$res\n";  // un poco de formato por favor
+    return $res;
 }
 
 // ya que tenemos tarray(), hagamos tablas
@@ -39,10 +39,10 @@ function tarray($tag, $arr = [], $a = []) {
 // es un poco chapusa pero bueno, luego lo hago  bien :)
 
 function table($harr, $aarr, $tablea = [], $tha = [], $tra = [], $tda = []) {
-    $res = t("tr", tarray("th", $harr, $tha), $tra);       // aqui acumulamos el resultado parcial - los headings + rows
+    $res = "\n" . t("tr", tarray("th", $harr, $tha), $tra);       // aqui acumulamos el resultado parcial - los headings + rows
 
     foreach ($aarr as $arr) 
-        $res .= t("tr", tarray("td", $arr, $tda), $tra); 
+        $res .= "\n" . t("tr", tarray("td", $arr, $tda), $tra); 
 
     return t("table", $res, $tablea);
 }
