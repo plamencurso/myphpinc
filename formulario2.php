@@ -41,7 +41,7 @@ echo form([                     // mostramos siempre el formulario, procesamos e
 // , ["method" => "POST"]           // descomentamos esta linia si queremos POST, form() hace GET por defecto
 );
 
-'; eval($code); echo gpp($code);
+'; eval($code); highlight_string("<?php$code?>");
 
 $yo = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["SCRIPT_NAME"];
 include "incf.php";

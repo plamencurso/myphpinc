@@ -1,5 +1,5 @@
 <?php
-$editing = true;  // do not include disqus
+$editing = false;  // do not include disqus
 include_once "inc.php"; // header
 myInit(__FILE__);
 $code = '
@@ -30,6 +30,7 @@ foreach ($continentes as $co) {
         foreach($ciudades[$pa] as $ci) {
             $ul .= "      <li>$ci</li>\n";
             $cpc[$co][$pa][$ci] = 1;                // en este punto tenemos los 3 datos, se puede hacer de cualquier forma
+            $ecpc[$co][$pa][] = $ci;                // el array de Eugenio
             $lcpc[] = [$co, $pa, $ci];              // forma apta para table()
         };
         $ul .= "    </ul>\n";                             // cerramos las listas abiertas                           

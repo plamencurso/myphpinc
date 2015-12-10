@@ -4,7 +4,7 @@ if (__FILE__ == $_SERVER['SCRIPT_FILENAME']) {
     require_once 'inc.php'; // header
     myInit(__FILE__);
 }
-//$code = '
+$code = '
 // FUNCIONES matematicas
 $funciones = [ // [figura => [nombreFuncion => funcion]]
     "cuadrado" =>   ["area" => function($a) {return $a * $a;}, "perimetro" => function($a) {return 4 * $a;}], // cuadrado de a 
@@ -86,10 +86,10 @@ function lnvinput($n, $v, $a = []) { return t("label", $n) . input(cattr("name",
 function submit($n, $v = "") {return input(["type" => "submit", "name" => $n, "value" => ($v ? $v : $n)]); }  // mecesita ser algo como lninput
 function hidden($n, $v) {return input(["type" => "hidden", "name" => $n, "value" => $v]); }
 function ahref($href, $t) { return t("a", $t, ["href" => $href]); }
-//'; eval($code); 
+'; eval($code); 
 
 if (__FILE__ == $_SERVER['SCRIPT_FILENAME']) { // nos estan mostrando directamente, no incluyendo, muestra una pagina entera
-    echo gpp($code); // muestra el codigo 
+    highlight_string("<?php$code?>"); // muestra el codigo 
 
     // getting my URL
 

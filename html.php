@@ -59,22 +59,56 @@ function form($c, $a = []) {return "\n" .
     ) . "\n";
 }
 
+// default is POST to self
+function formpost($c, $a = []) {return "\n" . 
+    t("form", $c, 
+        cattr("name", "formulario", 
+        cattr("action", basename($_SERVER["SCRIPT_NAME"]),  // atributos por default 
+        cattr("method", "POST", $a)))
+    ) . "\n";
+}
+
+
 // funciones pequenitas
 
+function b($s) { return t("b", $s); }  // bold
+function h($s, $c = "red") { return t("font", $s, ["color" => $c]); }  // highlight
+
 function br() { return t("br"); }
+function h1($c) { return t("h1", $c); }
+function h2($c) { return t("h2", $c); }
 function h3($c) { return t("h3", $c); }
 function h4($c) { return t("h4", $c); }
+function h5($c) { return t("h5", $c); }
+function h6($c) { return t("h6", $c); }
 
 function input($ia) {return t("input", "", $ia); } 
 
 // special(simple defaults) inputs
 function linput($l, $a) { return t("label", $l) . input($a); } // labeled input
-function lninput($n, $a = []) { return t("label", $n) . input(cattr("name", $n, $a)); } // labeled input with a default name=label
+function lninput($l, $n, $a = []) { return t("label", $l) . input(cattr("name", $n, $a)); } // labeled input with a default name=label
 function lnvinput($n, $v, $a = []) { return t("label", $n) . input(cattr("name", $n, cattr("value", $v, $a))); } // labeled input with a default name=$n and value=$v
 
 function submit($n, $v = "") {return input(["type" => "submit", "name" => $n, "value" => ($v ? $v : $n)]); }  // mecesita ser algo como lninput
 function hidden($n, $v) {return input(["type" => "hidden", "name" => $n, "value" => $v]); }
 function ahref($href, $t) { return t("a", $t, ["href" => $href]); }
+
+// otros
+
+// mucho cuidao aquí, modificamos un parametro - $v
+function param($p, &$v) {                               // prueba si tenemos el dato en _GET y lo asigna a $v, devuelve el valor actual o "" 
+    if (isset($_GET) && array_key_exists($p, $_GET))    // la primera vez $_GET no esta ...
+        return ($v = $_GET[$p]);                        // aqui modificamos el variable pasada, y devolvemos el valor también
+    return "";  // no esta
+}
+
+function parampost($p, &$v) {                               // prueba si tenemos el dato en _GET y lo asigna a $v, devuelve el valor actual o "" 
+    if (isset($_POST) && array_key_exists($p, $_POST))    // la primera vez $_GET no esta ...
+        return ($v = $_POST[$p]);                        // aqui modificamos el variable pasada, y devolvemos el valor también
+    return "";  // no esta
+}
+
+
 //'; eval($code); 
 
 if (__FILE__ == $_SERVER['SCRIPT_FILENAME']) { // nos estan mostrando directamente, no incluyendo, muestra una pagina entera

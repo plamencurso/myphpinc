@@ -2,7 +2,7 @@
 $editing = true;  // do not include disqus
 require_once "../inc.php"; // header
 myInit(__FILE__);
-#$code = '
+$code = '
 
 // tipos y tamaños aceptables ttac[tipo] = tamaño
 $ttac = [
@@ -51,7 +51,7 @@ for($i = 0; $i < $c; $i++) {
 }
 
 
-#'; eval($code); highlight_string("<?php $code ? >");
+'; eval($code); highlight_string("<?php $code");
 
 // getting my URL
 $yo = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["SCRIPT_NAME"];

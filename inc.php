@@ -31,6 +31,7 @@ function myInit($f, $title = "") { // calling file, optional title
     if ($_GET) PC::db($_GET, "_GET");
     if ($_POST) PC::db($_POST, "_POST");
     if ($_FILES) PC::db($_FILES, "_FILES");
+    if ($_COOKIE) PC::db($_COOKIE, "_COOKIE");
     if ($_REQUEST) PC::db($_REQUEST, "_REQUEST");
 };
 

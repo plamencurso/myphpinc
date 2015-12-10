@@ -2,7 +2,7 @@
 $editing = true;  // do not include disqus
 require "inc.php"; // header
 myInit(__FILE__);
-#$code = '
+$code = '
 $yo = basename($_SERVER["SCRIPT_NAME"]);  // para enlaces relativos a este mismo script
 
 // DATOS
@@ -76,7 +76,7 @@ function q($d) { return htmlspecialchars($d); }     // para incluirlo en un URL
 
 // FIN DE FUNCIONES
 
-#'; eval($code); echo gpp($code);
+'; eval($code); echo highlight_string("<?php $code");
 // getting my URL
 $yo = "https://" . $_SERVER["HTTP_HOST"] . $_SERVER["SCRIPT_NAME"];
 include "incf.php";
