@@ -1,6 +1,6 @@
 <?php
-require_once "../inc.php"; // header
-myInit(__FILE__);
+#require_once "../inc.php"; // header
+#myInit(__FILE__);
 
 require_once "../html.php";
 
@@ -41,48 +41,45 @@ function db_query($con, $q) {
 
 // metadata functions
 
-function db_getPK($db, $table) {
+function db_open_meta() { return db_open("information_schema"); }
+function db_close_meta($metac) { return db_close($metac); }
 
-    $metac = db_open("information_schema");
+// informacion sobre las columnas que necesitemos, de momento el nombre solo
+function db_getColumns($metac, $db, $table) {
+    $cols = db_query($metac, "SELECT column_name FROM columns WHERE table_schema = '$db' AND table_name = '$table'");
 
-    // esto assume que la tabla tiene exactamente un PRIMARY KEY y no comprueba nada
+    return $cols; 
+}
+
+function db_getPK($metac, $db, $table) {
+
+    // esto devolvera todos PRIMARYs
     $pk = db_query($metac, "
         SELECT column_name 
         FROM key_column_usage 
         WHERE constraint_schema  = '$db' AND table_name = '$table' AND constraint_name = 'PRIMARY'");
 
-    db_close($metac);
-    return $pk[1][0][0];
+    return $pk[1][0][0]; // aqui devolvemos solo el primero, hay que cambiarlo, pero va a romper a aritstas_etc4
 }
 
-function db_getFK($db, $table) {
-
-    $metac = db_open("information_schema");
-
-    // esto assume que la tabla tiene exactamente un FOREIGN KEY y no comprueba nada
+function db_getFK($metac, $db, $table) {
     $fk = db_query($metac, "
         SELECT column_name, referenced_table_name, referenced_column_name
         FROM key_column_usage 
         WHERE constraint_schema  = '$db' AND table_name = '$table' AND referenced_table_name IS NOT NULL
     ");
 
-    db_close($metac);
     return $fk;
 }
 
 // get reverse FK (las que se referien a nosotros)
-function db_getrFK($db, $table) {
-
-    $metac = db_open("information_schema");
-
-    // esto assume que la tabla esta referida por exactamente un FOREIGN KEY y no comprueba nada
+function db_getrFK($metac, $db, $table) {
     $fk = db_query($metac, "
         SELECT referenced_column_name, table_name, column_name
         FROM key_column_usage 
         WHERE constraint_schema  = '$db' AND referenced_table_name = '$table'
     ");
 
-    db_close($metac);
     return $fk;
 }
 
