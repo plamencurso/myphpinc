@@ -39,8 +39,18 @@ $cols = db_getColumns($meta, $d, $t);
 foreach ($cols[1] as $i) { $columnas[] = $i[0]; }
 PC::db($columnas);
 
+// guardamos la clave primaria, debe estar exactamente una
+$pk = db_getPK($meta, $d, $t);
+PC::db($pk, "pk");
+
+// el index del PK en las columnas
+$pki = array_search($pk, $columnas);    // esto no debe fallar porque siempre necesitamos seleccionar el PK
+PC::db($pki, "pki");
+
+// comandos de momento - i insertar, b borrar, a actualizar, pasamos el ID en id
 if ($c) {
     if($c == "i") {
+
         echo "Quiere insertar", br();
         
         // cojemos los valores pasados
@@ -51,8 +61,24 @@ if ($c) {
         $sql = "INSERT INTO $t (" . implode(",", $columnas) . ") VALUES (" . implode(",", array_map("comillas", $valores)) .  ")";
         echo $sql;
         db_query($con, $sql);
+
     } else if ($c == "b") {
+
         // Borrar
+        param("id", $id);
+        echo "Borrando $id ...", br();
+        $sql = "DELETE FROM $t WHERE $pk = $id";
+        echo $sql;
+        db_query($con, $sql);
+
+    } else if ($c == "a") {
+
+        // Actualizar ... hm, para borrar el ID es sufficiente pero no para Actualizar - habra que pasar todos los datos nuevos, o solo los cambiados, pero como?
+        // haha, pasamos el ID en el atributo name de un submit, luego habra que buscarlo
+
+        param("id", $id);
+        echo "Quiere actualizar $id, no se puede todavía", br();
+
     } else die("Comando $c desconocido");
 }
 
@@ -70,21 +96,38 @@ function comillas($s) {
 
 // modificamos table() de html.php para añadir controles para editar
 function etable($datos, $tablea = [], $tha = [], $tra = [], $tda = []) {
-    global $d, $t, $columnas;
+    global $d, $t, $columnas, $pki, $qs;
 
     $res = "\n" . t("tr", tarray("th", $columnas, $tha), $tra);       // aqui acumulamos el resultado parcial - los headings + rows
 
     // intentamos hacer una fila de edit controls
     $edits = "";
-    foreach ($columnas as $i) $edits .= "\n" . t("td", input(["name" => $i]), $tda);
-    $res .= t("tr", $edits . t("td", submit("Insertar") . hidden("d", $d) . hidden("t", $t). hidden("c", "i"), $tda), $tra);
+    foreach ($columnas as $i) $edits .= "\n" . td(input(["name" => $i]), $tda);
+    $res .= tr($edits . td(submit("Insertar") . hidden("d", $d) . hidden("t", $t). hidden("c", "i"), $tda), $tra);
 
-    foreach ($datos[1] as $arr) 
-        $res .= "\n" . t("tr", tarray("td", $arr, $tda), $tra); 
+    // primero hacemos tr() y td() que ya se repite mucho t("tr", ...) ... ya están
+    $i = 0;
+    foreach ($datos[1] as $arr) {
+//        PC::db($arr, "arr");
+
+        // cojemos el valor del PK para esta fila
+        $pkv = $arr[$pki];
+        
+        // añadimos los botones
+        // $arr[] = submit("Actualizar", $pkv) . submit("Borrar", $pkv);
+        
+        // pues no van a ser botones que no hacen lo que necesito, probamos con vinculos
+        $arr[] = ahref("$qs&c=a&id=$pkv", "Actualizar") . " " . ahref("$qs&c=b&id=$pkv", "Borrar");
+
+        $res .= "\n" . tr(etarray("td", $arr, $tda), $tra); // podria hacer que etarray coja este "td" .. como nombre de función pero bueno
+
+//        PC::db($arr, "arrb");
+        $i++;       // el index de la fila
+    };
 
     return t("table", $res, $tablea);
+    
 }
-
 
 function etarray($tag, $arr = [], $a = []) {
     $res = "";   // el resultado en HTML
