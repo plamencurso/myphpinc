@@ -25,14 +25,15 @@ param("vi", $vi);
 $qs = "$yo?";
 
 $con = db_open($db_name);
+$meta = db_open_meta();
 
 echo "KEYS:", br();
 
 foreach (["artistas", "albumes", "canciones", "videos"] as $t) {
-    echo "$t PK: ",  db_getPK($db_name, $t), br();
-    $ka = db_getFK($db_name, $t); if($ka[0]) echo "$t FK: " . $ka[1][0][0] . " ref tabla " . $ka[1][0][1] . " col " . $ka[1][0][2] . br();
+    echo "$t PK: ",  db_getPK($meta, $db_name, $t), br();
+    $ka = db_getFK($meta, $db_name, $t); if($ka[0]) echo "$t FK: " . $ka[1][0][0] . " ref tabla " . $ka[1][0][1] . " col " . $ka[1][0][2] . br();
     PC::db($ka, "$t");
-    $rfk = db_getrFK($db_name, $t); if($rfk[0]) echo "Referencias a $t: ", table($rfk[0], $rfk[1]);
+    $rfk = db_getrFK($meta, $db_name, $t); if($rfk[0]) echo "Referencias a $t: ", table($rfk[0], $rfk[1]);
 }
 
 // empezamos por las canciones de momento, luego veremos que hacer con los videos
@@ -81,6 +82,7 @@ if ($ca) {
 }
 
 db_close($con);
+db_close($meta);
 
 // FIN DE PROGRAMA PRINCIPAL
 

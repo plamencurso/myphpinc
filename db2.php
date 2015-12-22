@@ -83,4 +83,19 @@ function db_getrFK($metac, $db, $table) {
     return $fk;
 }
 
+// get a list of databases
+function db_databases($metac) {
+    $dbs = db_query($metac, "SELECT schema_name FROM schemata ORDER BY 1");
+    
+    return array_map(function($a) { return $a[0]; }, $dbs[1]);
+}
+
+// get a list of tables
+function db_tables($metac, $db) {
+    $dbs = db_query($metac, "SELECT table_name FROM tables WHERE table_schema = '$db' ORDER BY 1");
+    
+    return array_map(function($a) { return $a[0]; }, $dbs[1]);
+}
+
+
 ?>

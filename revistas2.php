@@ -24,70 +24,122 @@ param("d", $d); // nombre de base de datos
 param("t", $t); // nombre de la tabla
 param("c", $c); // command
 
-if (!$d or !$t) die("Faltan parametros");
-
-$qs = "?d=$d&t=$t";     // guardamos los parametros para el query string
-
-$con = db_open($d);
 $meta = db_open_meta();
 
-// si es solo para los nombres de las columnas ... el SELECT los devuelve
-// luego podemos necesitar mas cosas
-$cols = db_getColumns($meta, $d, $t);
-// PC::db($cols, "getcols");
+if (!$d) {      // pedimos $d y $t si no estan
 
-foreach ($cols[1] as $i) { $columnas[] = $i[0]; }
-PC::db($columnas);
+    // mostrar bases de datos
+    $dbs = db_databases($meta);
+    echo h3("Seleciona una base:") . ul(tarray("li", array_map("link_database", $dbs)));
 
-// guardamos la clave primaria, debe estar exactamente una
-$pk = db_getPK($meta, $d, $t);
-PC::db($pk, "pk");
+} else if (!$t) {
 
-// el index del PK en las columnas
-$pki = array_search($pk, $columnas);    // esto no debe fallar porque siempre necesitamos seleccionar el PK
-PC::db($pki, "pki");
+    // mostrar tablas
+    $tables = db_tables($meta, $d);
+    echo h3("Seleciona una tabla:") . ul(tarray("li", array_map("link_table", $tables)));
+    
+} else {  // entrada principal
 
-// comandos de momento - i insertar, b borrar, a actualizar, pasamos el ID en id
-if ($c) {
-    if($c == "i") {
+    $qs = "?d=$d&t=$t";     // guardamos los parametros para el query string (ahora veo que quise decir .= pero funciona asi tambien)
+    
+    $con = db_open($d);
+    
+    // si es solo para los nombres de las columnas ... el SELECT los devuelve
+    // luego podemos necesitar mas cosas
+    $cols = db_getColumns($meta, $d, $t);
+    // PC::db($cols, "getcols");
+    
+    foreach ($cols[1] as $i) { $columnas[] = $i[0]; }
 
-        echo "Quiere insertar", br();
-        
-        // cojemos los valores pasados
-        foreach ($columnas as $col) $valores[] = $_REQUEST[$col];
-        
-        PC::db($valores, "valores");
-        
-        $sql = "INSERT INTO $t (" . implode(",", $columnas) . ") VALUES (" . implode(",", array_map("comillas", $valores)) .  ")";
-        echo $sql;
-        db_query($con, $sql);
+    // guardamos la clave primaria, debe estar exactamente una
+    $pk = db_getPK($meta, $d, $t);
+    
+    // el index del PK en las columnas
+    $pki = array_search($pk, $columnas);    // esto no debe fallar porque siempre necesitamos seleccionar el PK
+    
+    // claves, etc
+    mostrar_informacion($t);
+    
+    // comandos de momento - i insertar, b borrar, a actualizar, pasamos el ID en id
+    if ($c) {
+        if($c == "i") {
+    
+            echo "Quiere insertar", br();
+            
+            // cojemos los valores pasados
+            foreach ($columnas as $col) $valores[] = $_REQUEST[$col];
+            $sql = "INSERT INTO $t (" . implode(",", $columnas) . ") VALUES (" . implode(",", array_map("comillas", $valores)) .  ")";
+            echo $sql;
+            db_query($con, $sql);
+    
+        } else if ($c == "b") {
+    
+            // Borrar
+            param("id", $id);
+            echo "Borrando $id ...", br();
+            $sql = "DELETE FROM $t WHERE $pk = $id";
+            echo $sql;
+            db_query($con, $sql);
+    
+        } else if ($c == "a") {
+    
+            // Actualizar ... hm, para Borrar el ID es sufficiente pero no para Actualizar - habra que pasar todos los datos nuevos, o solo los cambiados, pero como?
+            // haha, pasamos el ID en el atributo name de un submit, luego habra que buscarlo
+            
+    
+            param("id", $id);
+            echo "Quiere actualizar $id, no se puede todavía", br();
+    
+        } else die("Comando $c desconocido");
+    }
 
-    } else if ($c == "b") {
-
-        // Borrar
-        param("id", $id);
-        echo "Borrando $id ...", br();
-        $sql = "DELETE FROM $t WHERE $pk = $id";
-        echo $sql;
-        db_query($con, $sql);
-
-    } else if ($c == "a") {
-
-        // Actualizar ... hm, para borrar el ID es sufficiente pero no para Actualizar - habra que pasar todos los datos nuevos, o solo los cambiados, pero como?
-        // haha, pasamos el ID en el atributo name de un submit, luego habra que buscarlo
-
-        param("id", $id);
-        echo "Quiere actualizar $id, no se puede todavía", br();
-
-    } else die("Comando $c desconocido");
+    $datos = db_query($con, "SELECT * FROM $t ORDER BY 1");
+    echo form(etable($datos, []));    // command = insert
+    
 }
 
 
-$datos = db_query($con, "SELECT * FROM $t ORDER BY 1");
-echo form(etable($datos, []));    // command = insert
+//  FUNCIONES /////////////////////////////////////////////////////////////////////////////////
 
 
-//  FUNCIONES
+// hacer vinculo a base de datos
+function link_database($d) {
+
+    return ahref("?d=$d", $d);
+}
+
+// hacer vinculo a tabla
+function link_table($t) {
+    global $d;
+    
+    return ahref("?d=$d&t=$t", $t);
+}
+
+// mostrar información sobre claves, referencias, etc
+function mostrar_informacion() {
+    global $d, $t, $pk, $pki, $con, $meta;
+    
+    echo h3("Tabla $t");
+    echo h4("Clave primaria: $pk con index $pki");
+    echo h4("Claves forraneas:");
+
+    $fka = db_getFK($meta, $d, $t);
+    if ($fka[0]) {
+        foreach ($fka[1] as $fk) {
+            echo h5($fk[0] . " hace referencia a " . link_table($fk[1]) . "(" . $fk[2] . ")"); 
+        }
+    }
+    
+    echo h4("Referencias a esta tabla:");
+
+    $rfka = db_getrFK($meta, $d, $t);
+    PC::db($rfka, "rfka");
+    if ($rfka[0]) {
+        foreach ($rfka[1] as $rfk) {
+            echo h5(link_table($rfk[1])  . "(" . $rfk[2] . ") hace referencia a " . $rfk[0]); 
+        }
+    }
+}
 
 // añadir commilas a valores para SQL
 function comillas($s) {
@@ -135,6 +187,9 @@ function etarray($tag, $arr = [], $a = []) {
     return $res;
 }
 
+
+
+// VERSION ANTIGUA //////////////////////////////////////
 
 if (0) { // quitamos esto del medio de momento - lo de artistas_etc4.php
 
