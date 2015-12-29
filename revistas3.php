@@ -6,6 +6,8 @@ myInit(__FILE__);
 require_once "../html.php";
 require_once "db2.php";  // la version nueva con metadata
 
+echo p("Empezando...", ["id" => "status"]); // aqui dejamos mensajes y otras cosas
+
 $yo = basename($_SERVER["SCRIPT_NAME"]);  // para enlaces relativos a este mismo script
 $db_name = "discoteca";
 
@@ -76,6 +78,7 @@ if (!$d) {      // pedimos $d y $t si no estan
     
             // Borrar
             param("id", $id);
+
             echo "Borrando $id ...", br();
             $sql = "DELETE FROM $t WHERE $pk = $id";
             echo $sql;
